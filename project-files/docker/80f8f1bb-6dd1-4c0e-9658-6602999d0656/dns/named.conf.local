@@ -1,0 +1,18 @@
+key "updatekey" {
+    algorithm hmac-md5;
+    secret "OfdzJnfDOCU40zp5vleiTcPPEtht1p5Zj/v8p7z5Gg0=";
+};
+
+zone "stark.lan" {
+    type master;
+    file "/etc/bind/db.stark.lan";
+    allow-update { key "OfdzJnfDOCU40zp5vleiTcPPEtht1p5Zj/v8p7z5Gg0="; };
+};
+
+zone "10.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.10.168.192";
+    allow-update { key "OfdzJnfDOCU40zp5vleiTcPPEtht1p5Zj/v8p7z5Gg0="; };
+};
+
+

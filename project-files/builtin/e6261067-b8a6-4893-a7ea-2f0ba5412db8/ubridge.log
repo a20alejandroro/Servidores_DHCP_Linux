@@ -1,0 +1,45 @@
+uBridge version 0.9.19 running with libpcap version 1.10.3 (with TPACKET_V3)
+Hypervisor TCP control server started (IP localhost port 38953).
+UDP tunnel connecting from local port 10027 to IPv4 address 127.0.0.1 on port 10026
+Source NIO listener thread for e6261067-b8a6-4893-a7ea-2f0ba5412db8-0 has started
+Destination NIO listener thread for e6261067-b8a6-4893-a7ea-2f0ba5412db8-0 has started
+recv: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down
+send: Network is down

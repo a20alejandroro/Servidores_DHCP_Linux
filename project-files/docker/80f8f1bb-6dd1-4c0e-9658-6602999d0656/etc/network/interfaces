@@ -1,0 +1,20 @@
+#
+# This is a sample network config, please uncomment lines to configure the network
+#
+
+# Uncomment this line to load custom interface files
+# source /etc/network/interfaces.d/*
+
+# Static config for eth0
+auto eth0
+iface eth0 inet static
+	address 192.168.10.12
+	netmask 255.255.255.0
+	gateway 192.168.10.254
+	up echo nameserver 192.168.10.12 > /etc/resolv.conf
+	up bash /dhcp/entrypoint.sh
+
+# DHCP config for eth0
+#auto eth0
+#iface eth0 inet dhcp
+#	hostname brunosct-dnsserver-1
