@@ -12,7 +12,6 @@ iface eth0 inet static
 	netmask 255.255.255.0
 	gateway 192.168.10.254
 	up echo nameserver 192.168.10.12 > /etc/resolv.conf
-	up bash /dhcp/entrypoint.sh
 
 # DHCP config for eth0
 #auto eth0

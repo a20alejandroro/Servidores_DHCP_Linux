@@ -23,6 +23,16 @@
                         "port": 53
                         }
                     ]
+                },
+                {
+                "name": "lannister.lan.",
+                "key-name": "updatekey",
+                "dns-servers": [
+                        {
+                        "ip-address": "192.168.10.12",
+                        "port": 53
+                        }
+                    ]
                 }
             ]
         },
@@ -37,8 +47,32 @@
                         "port": 53
                         }
                     ]
+                },
+                {
+                "name": "11.168.192.in-addr.arpa.",
+                "key-name": "updatekey",
+                "dns-servers": [
+                        {
+                        "ip-address": "192.168.10.12",
+                        "port": 53
+                        }
+                    ]
                 }
             ]
-        }
+        },
+        "loggers": [
+			{
+				"name": "kea-dhcp4",
+				"output-options": [
+					{
+						"output": "/var/log/kea-update.log",
+						"maxver": 8,
+						"maxsize": 204800,
+						"flush": true
+					}
+				],
+				"severity": "DEBUG"
+			}
+        ]
     }   
 }

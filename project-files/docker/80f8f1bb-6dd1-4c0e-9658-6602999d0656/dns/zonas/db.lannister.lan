@@ -1,0 +1,10 @@
+$TTL 86400
+@       IN      SOA     arya.stark.lan. admin.stark.lan. (
+                              2 ; Serial
+                              3600      ; Refresh
+                              600       ; Retry
+                              2419200   ; Expire
+                              86400 ) ; Negative Cache TTL
+
+@       IN      NS      arya.stark.lan.
+tywin.lannister.lan.  IN      A       192.168.10.8

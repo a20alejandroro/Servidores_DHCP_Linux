@@ -4,6 +4,7 @@
             "interfaces": ["eth0"],
             "dhcp-socket-type": "raw"
         },
+        "dhcp-ddns": { "enable-updates": true },
         "valid-lifetime": 7200,
         "renew-timer": 7000,
         "rebind-timer": 7100,
@@ -32,6 +33,11 @@
                         "always-send": true
                     },
                     {
+                        "name": "domain-name",
+                        "data": "stark.lan",
+                        "always-send": true
+                    },
+                    {
                         "name": "routers",
                         "data": "192.168.10.254",
                         "always-send": true
@@ -52,6 +58,11 @@
                     {
                         "name": "domain-name-servers",
                         "data": "192.168.10.12",
+                        "always-send": true
+                    },
+                    {
+                        "name": "domain-name",
+                        "data": "lannister.lan",
                         "always-send": true
                     },
                     {
@@ -89,11 +100,13 @@
                 "name": "kea-dhcp4",
                 "output_options": [
                     {
-                        "output": "/var/log/dhcp.log"
+                        "output": "/var/log/dhcp.log",
+                        "maxver": 8,
+                        "maxsize": 204800,                        
+                        "flush": true
                     }
                 ],
-                "severity": "INFO",
-                "debuglevel": 0
+                "severity": "INFO"
             }
         ]
     }

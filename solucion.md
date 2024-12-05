@@ -24,7 +24,7 @@ Instala no equipo ned (Debian) un servidor DHCP coa seguinte configuración:
 
 Ficheiro entrypoint.sh:
 
-  ![Imagen1](/imagenes/imagen1_1.png)
+  ![Imagen1_1](/imagenes/imagen1_1.png)
 
 Ficheiro dhcp4.json
 
@@ -35,6 +35,7 @@ Ficheiro dhcp4.json
             "interfaces": ["eth0"],
             "dhcp-socket-type": "raw"
         },
+        "dhcp-ddns": { "enable-updates": true },
         "valid-lifetime": 7200,
         "renew-timer": 7000,
         "rebind-timer": 7100,
@@ -42,6 +43,7 @@ Ficheiro dhcp4.json
             {
                 "id": 1,
                 "subnet": "192.168.10.0/24",
+                "ddns-qualifying-suffix": "stark.lan",
                 "pools": [
                     { "pool": "192.168.10.30-192.168.10.32" },
                     { "pool": "192.168.10.101-192.168.10.230" }
@@ -62,6 +64,11 @@ Ficheiro dhcp4.json
                         "always-send": true
                     },
                     {
+                        "name": "domain-name",
+                        "data": "stark.lan",
+                        "always-send": true
+                    },
+                    {
                         "name": "routers",
                         "data": "192.168.10.254",
                         "always-send": true
@@ -71,6 +78,7 @@ Ficheiro dhcp4.json
             {
                 "id": 2,
                 "subnet": "192.168.11.0/24",
+                "ddns-qualifying-suffix": "lannister.lan",
                 "pools": [
                     { "pool": "192.168.11.101-192.168.11.230" }
                 ],
@@ -81,6 +89,11 @@ Ficheiro dhcp4.json
                     {
                         "name": "domain-name-servers",
                         "data": "192.168.10.12",
+                        "always-send": true
+                    },
+                    {
+                        "name": "domain-name",
+                        "data": "lannister.lan",
                         "always-send": true
                     },
                     {
@@ -118,17 +131,17 @@ Ficheiro dhcp4.json
                 "name": "kea-dhcp4",
                 "output_options": [
                     {
-                        "output": "/var/log/dhcp.log"
+                        "output": "/var/log/dhcp.log",
+                        "maxver": 8,
+                        "maxsize": 204800,                        
+                        "flush": true
                     }
                 ],
-                "severity": "INFO",
-                "debuglevel": 0
+                "severity": "INFO"
             }
         ]
     }
 }
-
-
 ~~~
 
 ---
@@ -141,100 +154,108 @@ Ficheiro dhcp4.json
 
 Ficheiro entrypoint.sh:
 
-  ![Imagen1](/imagenes/imagen2_1.png)
+  ![Imagen2_1](/imagenes/imagen2_1.png)
 
 Ficheiro named.conf.local:
 
 ~~~
-key "updatekey" {
-    algorithm hmac-md5;
-    secret "OfdzJnfDOCU40zp5vleiTcPPEtht1p5Zj/v8p7z5Gg0=";
+key "chaveupdate" {
+	algorithm hmac-sha256;
+	secret "x6LA1vDz1ITA+trpFY1ouW3gHxu7M0Z/xXCI9eOgJhI=";
 };
-
 zone "stark.lan" {
     type master;
-    file "/etc/bind/db.stark.lan";
-    allow-update { key "OfdzJnfDOCU40zp5vleiTcPPEtht1p5Zj/v8p7z5Gg0="; };
+    file "db.stark.lan";
+    allow-update {key "chaveupdate";};
 };
-
 zone "10.168.192.in-addr.arpa" {
     type master;
-    file "/etc/bind/db.10.168.192";
-    allow-update { key "OfdzJnfDOCU40zp5vleiTcPPEtht1p5Zj/v8p7z5Gg0="; };
+    file "db.192.168.10";
+    allow-update {key "chaveupdate";};
+};
+
+zone "lannister.lan" {
+    type master;
+    file "db.lannister.lan";
+    allow-update {key "chaveupdate";};
+};
+zone "11.168.192.in-addr.arpa" {
+    type master;
+    file "db.192.168.11";
+    allow-update {key "chaveupdate";};
 };
 ~~~
 
-Fichero named.conf.options: 
+Otros ficheros: 
 
-~~~
-options {
-	directory "/var/cache/bind";
-
-	// If there is a firewall between you and nameservers you want
-	// to talk to, you may need to fix the firewall to allow multiple
-	// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
-
-	// If your ISP provided one or more IP addresses for stable 
-	// nameservers, you probably want to use them as forwarders.  
-	// Uncomment the following block, and insert the addresses replacing 
-	// the all-0's placeholder.
-
-	//forwarders {
-	//	0.0.0.0;
-	//};
-
-	//========================================================================
-	// If BIND logs error messages about the root key being expired,
-	// you will need to update your keys.  See https://www.isc.org/bind-keys
-	//========================================================================
-	dnssec-validation no;
-	listen-on-v6 { none; };
-};
-~~~
-
-Fichero de zona primaria:
-~~~
-$TTL 86400
-@   IN  SOA arya.stark.lan. root.localhost. (
-    2023101001 ; Serial
-    3600       ; Refresh
-    1800       ; Retry
-    1209600    ; Expire
-    86400 )    ; Minimum TTL
-
-@       IN  NS      arya.stark.lan.
-arya    IN  A       192.168.10.12
-~~~
-
-Ficheiro de zona secundaria:
-~~~
-$TTL 86400
-@   IN  SOA arya.stark.lan. root.localhost. (
-    2023101001 ; Serial
-    3600       ; Refresh
-    1800       ; Retry
-    1209600    ; Expire
-    86400 )    ; Minimum TTL
-
-@   IN  NS     arya.stark.lan.
-12  IN  PTR    arya.stark.lan.
-~~~
+  ![Imagen2_2](/imagenes/imagen2_2.png)
 
 **8.** Configura nos equipos ned e robb un servizo DHCP failover para a rede stark.lan  e para lannister.lan
+
+Non facer
+
+**Configuración do router para que funcione como relay**
+
+Ficheiro entrypoint.sh:
+
+  ![Imagen3_1](/imagenes/imagen3_1.png)
+
+Ficheiro isc-dhcp-relay:
+
+~~~
+# Defaults for isc-dhcp-relay initscript
+# sourced by /etc/init.d/isc-dhcp-relay
+# installed at /etc/default/isc-dhcp-relay by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# What servers should the DHCP relay forward requests to?
+SERVERS="192.168.10.10"
+
+# On what interfaces should the DHCP relay (dhrelay) serve DHCP requests?
+INTERFACES="eth1 eth2 eth3"
+
+# Additional options that are passed to the DHCP relay daemon?
+OPTIONS=""
+~~~
 
 **9.** Necesitarás polo menos catro clientes (bran, jon, sansha) para a rede stark e tres para a  rede lannister (jamie).
 
 - Inclúe capturas de:
     - Configuración (grep -v "^#" /etc/dhcp/dhcpd.conf)
+
+    ![Imagen4_1](/imagenes/imagen4_1.png)
+
     - log de ned visualizando a asignación de enderezos en cada un dos pool e da reserva estática
+
+    ![Imagen4_2](/imagenes/imagen4_2.png)
+
     - Configuración de servidores DNS, router e enderezo IP de cada cliente
+
     - log de ned e robb (simultáneos) facendo unha actualización mediante chaves en arya.
+
     - log de ned visualizando asignacións da segunda subrede (lannister) e actualizacións no servidor dns correspondente.
+
     - Log dos dous servidores failover cando dous clientes obteñen enderezos
         - Os dous funcionan correctamente e os clientes renovan a concesión
         - O primeiro co cable desconectado e o segundo contectado, e os clientes renovan a concesión.
         - O primeiro co cable conectado e o segundo desconectado, e os clientes renovan a concesión.
+
     - Clientes tres dúas subredes, amosando DNS, router e enderezo IP.
+
+    Cliente en red stark.lan:
+
+    ![Imagen4_3](/imagenes/imagen4_3.png)
+    
+    Cliente en red lannister.lan:
+
+    ![Imagen4_2](/imagenes/imagen4_4.png)
+    
+    Cliente en red targaryen.lan:
+
+    ![Imagen4_5](/imagenes/imagen4_5.png)
 
 
 
